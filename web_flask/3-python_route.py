@@ -1,42 +1,47 @@
 #!/usr/bin/python3
-"""starts a Flask web application
+"""Starts a Flask web application.
+The application listens on 0.0.0.0, port 5000.
+Routes:
+    /: Displays 'Hello HBNB!'.
+    /hbnb: Displays 'HBNB'.
+    /c/<text>: Displays 'C' followed by the value of <text>.
+    /python/(<text>): Displays 'Python' followed by the value of <text>.
 """
 from flask import Flask
 
-
 app = Flask(__name__)
-app.url_map.strict_slashes = False
 
 
-@app.route('/')
-def hello():
-    """prints "Hello HBNB!"
-    """
-    return 'Hello HBNB!'
+@app.route("/", strict_slashes=False)
+def hello_hbnb():
+    """Displays 'Hello HBNB!'."""
+    return "Hello HBNB!"
 
 
-@app.route('/hbnb')
+@app.route("/hbnb", strict_slashes=False)
 def hbnb():
-    """prints “HBNB”
+    """Displays 'HBNB'."""
+    return "HBNB"
+
+
+@app.route("/c/<text>", strict_slashes=False)
+def c(text):
+    """Displays 'C' followed by the value of <text>.
+    Replaces any underscores in <text> with slashes.
     """
-    return 'HBNB'
+    text = text.replace("_", " ")
+    return "C {}".format(text)
 
 
-@app.route('/c/<text>')
-def c_is_fun(text):
-    """prints "C" followed by the value of the text variable
+@app.route("/python", strict_slashes=False)
+@app.route("/python/<text>", strict_slashes=False)
+def python(text="is cool"):
+    """Displays 'Python' followed by the value of <text>.
+    Replaces any underscores in <text> with slashes.
     """
-    return 'C {}'.format(text.replace('_', ' '))
+    text = text.replace("_", " ")
+    return "Python {}".format(text)
 
 
-@app.route('/python')
-@app.route('/python/<text>')
-def python_is_magic(text='is cool'):
-    """prints “Python ”, followed by the value of the text
-    """
-    return 'Python {}'.format(text.replace('_', ' '))
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0")
